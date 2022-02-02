@@ -64,6 +64,10 @@ function convertToToc(source) {
 }
 
 function processOperation(op, method, resource, options) {
+    if (op.hidden) {
+        return;
+    }
+
     var header = data.header;
     var opName = (op.operationId ? op.operationId : data.subtitle);
     if (options.tocSummary && op.summary) opName = op.summary;
@@ -111,6 +115,7 @@ function processOperation(op, method, resource, options) {
     data.requiredParameters = [];
     data.headerParameters = [];
     data.bodyParameter = null;
+    data.platformDescription = op.platformDescription;
 
     var sharedParameters = data.openapi.paths[method.path].parameters || [];
     var opParameters = (data.openapi.paths[method.path][method.op].parameters || []);
@@ -169,6 +174,7 @@ function processOperation(op, method, resource, options) {
 
     for (var p in parameters) {
         var param = parameters[p];
+        
         param.required = (param.required ? param.required : false);
         param.safeType = (param.type || 'object');
         if (!param.depth) param.depth = 0;
@@ -250,7 +256,7 @@ function processOperation(op, method, resource, options) {
 
                 // we need to know whether we need to use -F or -d for all of the data
                 data.bodyParams.forEach(function(param) {
-                    if (param.type == 'file') {
+                    if (param.type == 'object') {
                         fieldPrefix = '-F';
                     } else if (param.property == 'appdata') {
                         fieldPrefix = '--data-urlencode';
@@ -451,10 +457,12 @@ function processOperation(op, method, resource, options) {
 
     for (var resp in op.responses) {
         let response = op.responses[resp];
-
-        response.status = resp;
+        resp = resp.replace(/#/g, '');
+        response.errorref = 'errorref' in response ? response.errorref : '';
+        response.status = resp.replace(/#/g, '');
         response.meaning = (resp == 'default' ? 'Default' : 'Unknown');
         var url = '';
+
         for (var s in common.statusCodes) {
             if (common.statusCodes[s].code == resp) {
                 response.meaning = common.statusCodes[s].phrase;

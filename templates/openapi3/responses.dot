@@ -1,6 +1,12 @@
+{{? data.platformDescription }}
+<h3 id="endpoint-xplatform-notice">Cross-Platform Filtering</h3>
+
+{{=data.platformDescription}}
+{{?}}
+
 <h3 id="{{=data.opName}}-responses">Responses</h3>
 
-Status|Meaning|Description|Response Schema
----|---|---|---|
-{{~ data.responses :r}}{{=r.status}}|{{=r.meaning}}|{{=r.description}}|{{=r.schema}}
+Status|Meaning|Error Ref|Description|Response Schema
+---|---|----|---|---|
+{{~ data.responses :r}}{{=r.status}}|{{=r.meaning}}|{{=r.errorref}}|{{=r.description}}|{{=r.schema}}
 {{~}}
