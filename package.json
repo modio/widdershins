@@ -40,7 +40,7 @@
     "node-fetch": "^1.7.3",
     "openapi-sampler": "^1.0.0-beta.7",
     "openapi_optimise": "^1.0.4",
-    "swagger2openapi": "^2.6.1",
+    "swagger2openapi": "^7.0.8",
     "yargs": "^9.0.1"
   },
   "devDependencies": {
